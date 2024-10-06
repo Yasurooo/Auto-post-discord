@@ -4,6 +4,12 @@
 - `main.py`: file utama dalam auto post!
 - `config.json`: adalah konfigurasi untuk auto post!
 
+
+# Instalasi
+- Clone repositori ini: `git clone https://github.com/Yasurooo/Yasurooo.git`
+Masuk ke direktori proyek: `cd Yasurooo`
+
+
 # Konfigurasi
 - edit pada `config.json`: untuk mengatur token, channel, webhook, pesan, kecepatan
 
