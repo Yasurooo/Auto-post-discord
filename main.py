@@ -61,11 +61,6 @@ def send_message_personal(content):
                 "inline": True
             },
             {
-                "name": "👤 User",
-                "value": f"<@{TOKEN.split('.')[0]}>",  # Placeholder for the user ID, needs adjustment
-                "inline": True
-            },
-            {
                 "name": "📊 Message Count",
                 "value": str(message_count + 1),  # Increment message count
                 "inline": True
@@ -77,11 +72,14 @@ def send_message_personal(content):
             }
         ],
         "thumbnail": {
-            "url": "https://your-thumbnail-url.com/thumbnail.png"
+            "url": "https://cdn.discordapp.com/attachments/1287019453921493103/1293534663041876060/1728202990241.jpg?ex=6707b988&is=67066808&hm=1c995747e4cbc8a028bd36090492ddf6677e7c2fd2980b0cc265935b7defde49&"
+        },
+        "image": {
+            "url": "https://cdn.discordapp.com/attachments/1287019453921493103/1293534663041876060/1728202990241.jpg"  # Example image URL
         },
         "footer": {
             "text": "Auto Post By Void Server © 2024",
-            "icon_url": "https://cdn.discordapp.com/attachments/1287019453921493103/1292401890813939764/images_1.jpg?ex=67039a8e&is=6702490e&hm=6be1e3a2aed5900184937bac30225d2b3bf3e7fda7c5442e9ac58ebdf2ece246&"
+            "icon_url": "https://cdn.discordapp.com/attachments/1287019453921493103/1292401890813939764/images_1.jpg"
         },
         "timestamp": str(datetime.now())
     }
@@ -96,7 +94,7 @@ def send_message_personal(content):
 
     if response.status_code == 200:
         message_count += 1  # Increment message count on successful send
-        log_message(embed)  # Log embed directly
+        log_message(embed, channel_id=CHANNEL_ID)  # Log embed directly
     elif response.status_code == 429:
         # Handle rate limit error
         retry_after = response.json().get('retry_after', 0) / 1000  # Get retry time in seconds
@@ -105,62 +103,93 @@ def send_message_personal(content):
         send_message_personal(content)  # Retry sending the message
     else:
         # Log error message as a string
-        log_message(f"Pesan pribadi gagal dikirim: {content} - Status Code: {response.status_code} - {response.text}")
+        log_message(f"Pesan pribadi gagal dikirim: {content} - Status Code: {response.status_code} - {response.text}",
+                    status="Error", channel_id=CHANNEL_ID)
 
 # Function to log messages using Webhook
-def log_message(log_content):
+def log_message(log_content, status="Success", channel_id=None, message_content=None):
     log_data = {}
+    
+    # Handle successful and error logs
     if isinstance(log_content, dict):
         # Create log embed for successful messages
         log_embed = {
-            "title": "Messages Logs",
+            "title": "🟢 **Void Room's**",
             "description": "Pesan berhasil dikirim.",
-            "color": 808080,  # Embed color
+            "color": 5763719,  # Greenish color for success
             "fields": [
                 {
-                    "name": "Original Message:",
-                    "value": log_content["description"],
+                    "name": "**Original Message:**",
+                    "value": log_content["description"] if message_content is None else message_content,
                     "inline": False
                 },
                 {
-                    "name": "📅 Uptime",
+                    "name": "📅 **Uptime**",
                     "value": format_uptime(start_time),
                     "inline": True
                 },
                 {
-                    "name": "Status",
-                    "value": "Success",
+                    "name": "🔔 **Status**",
+                    "value": status,  # Status: Success
+                    "inline": True
+                },
+                {
+                    "name": "💬 **Channel**",
+                    "value": f"<#{channel_id}>" if channel_id else "N/A",  # Mention channel
                     "inline": True
                 }
             ],
+            "thumbnail": {
+                "url": "https://cdn.discordapp.com/attachments/1287019453921493103/1293534663041876060/1728202990241.jpg"  # Example thumbnail URL
+            },
             "footer": {
                 "text": "Auto post by Void Server",
-                "icon_url": "https://cdn.discordapp.com/attachments/1287019453921493103/1292401890813939764/images_1.jpg?ex=67039a8e&is=6702490e&hm=6be1e3a2aed5900184937bac30225d2b3bf3e7fda7c5442e9ac58ebdf2ece246&"  # Footer icon for log
+                "icon_url": "https://cdn.discordapp.com/attachments/1287019453921493103/1293534663041876060/1728202990241.jpg?ex=6707b988&is=67066808&hm=1c995747e4cbc8a028bd36090492ddf6677e7c2fd2980b0cc265935b7defde49&"
             },
             "timestamp": str(datetime.now())
-        }
-
-        log_data = {
-            "embeds": [log_embed],  # Send embed as log
-            "username": "Auto Post Logs"  # Log sender name
         }
     else:
         # Create log embed for error messages
         log_embed = {
-            "title": "Log Kesalahan",
-            "description": log_content,  # Take error message
-            "color": 808080,  # Red color for errors
+            "title": "🔴 **Void Room's**",
+            "description": log_content,  # Take error message as description
+            "color": 15158332,  # Red color for errors
+            "fields": [
+                {
+                    "name": "**Original Message:**",
+                    "value": message_content if message_content else "N/A",
+                    "inline": False
+                },
+                {
+                    "name": "📅 **Uptime**",
+                    "value": format_uptime(start_time),
+                    "inline": True
+                },
+                {
+                    "name": "🔔 **Status**",
+                    "value": status,  # Status: Error
+                    "inline": True
+                },
+                {
+                    "name": "💬 **Channel**",
+                    "value": f"<#{channel_id}>" if channel_id else "N/A",  # Mention channel
+                    "inline": True
+                }
+            ],
+            "thumbnail": {
+                "url": "https://cdn.discordapp.com/attachments/1287019453921493103/1293534663041876060/1728202990241.jpg"  # Example thumbnail URL
+            },
             "footer": {
                 "text": "Auto Post Logs!",
-                "icon_url": "https://cdn.discordapp.com/attachments/1287019453921493103/1292401890813939764/images_1.jpg?ex=67039a8e&is=6702490e&hm=6be1e3a2aed5900184937bac30225d2b3bf3e7fda7c5442e9ac58ebdf2ece246&"  # Footer icon for log
+                "icon_url": "https://cdn.discordapp.com/attachments/1287019453921493103/1292401890813939764/images_1.jpg"
             },
             "timestamp": str(datetime.now())
         }
 
-        log_data = {
-            "embeds": [log_embed],
-            "username": "Auto Post Logs"  # Log sender name
-        }
+    log_data = {
+        "embeds": [log_embed],
+        "username": "Auto Post Logs"  # Log sender name
+    }
 
     response = requests.post(LOG_WEBHOOK_URL, json=log_data)
 
