@@ -25,6 +25,6 @@ Masuk ke direktori proyek: `cd Yasurooo`
     "CHANNEL_ID": "ID_CHANNEL",
     "LOG_WEBHOOK_URL": "LINK_WEBHOOK_URL",
     "PERSONAL_MESSAGE": "Message",
-    "DELAY_SECONDS": "delay"
+    "DELAY_SECONDS": delay
 }
 ```
