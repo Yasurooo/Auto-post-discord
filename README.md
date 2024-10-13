@@ -21,10 +21,20 @@ Masuk ke direktori proyek: `cd Yasurooo`
 # Configuration
 ```json
 {
-    "TOKEN": "TOKEN",
-    "CHANNEL_ID": "ID_CHANNEL",
-    "LOG_WEBHOOK_URL": "LINK_WEBHOOK_URL",
-    "PERSONAL_MESSAGE": "Message",
-    "DELAY_SECONDS": delay
+    "TOKEN": "INPUT_UR_TOKEN",
+    "CHANNELS": [
+        {
+            "id": "YOUR_ID_CHANNEL",
+            "delay": 1, // 1 minutes because * 60 seconds
+            "message": "INPUT_YOUR_MESSAGE"
+            
+        },
+        {
+            "id": "YOUR_ID_CHANNEL",
+            "delay": 1, // 1 minutes because * 60 seconds
+            "message": "INPUT_YOUR_MESSAGE"
+        }
+    ],
+    "LOG_WEBHOOK_URL": "INPUT_URL_WEBHOOK"
 }
 ```
